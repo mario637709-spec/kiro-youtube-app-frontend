@@ -53,7 +53,7 @@ const Profile = () => {
     };
 
     fetchAnalytics();
-  }, [user, navigate]);
+  }, [user, router]);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -87,7 +87,7 @@ const Profile = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    router.push('/');
   };
 
   if (!user) return null;
