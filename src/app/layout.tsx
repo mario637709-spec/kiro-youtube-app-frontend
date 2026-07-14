@@ -72,7 +72,7 @@ export default function RootLayout({
     return () => clearInterval(interval);
   }, []);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://kiro-youtube-app.vercel.app/api';
   const embedProxyUrl = `${API_BASE_URL}/videos/proxy/youtube-embed-proxy`;
 
   return (

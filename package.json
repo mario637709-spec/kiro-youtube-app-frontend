@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/core": "^8.4.1",
     "axios": "^1.6.0",
     "hls.js": "^1.6.16",
     "next": "^16.2.9",
@@ -37,6 +38,8 @@
   },
   "proxy": "https://kiro-youtube-app.vercel.app",
   "devDependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^8.4.1",
     "@types/node": "^26.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

@@ -20,7 +20,7 @@ const Shorts = () => {
   useEffect(() => {
     const fetchShorts = async () => {
       try {
-        const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+        const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kiro-youtube-app.vercel.app/api';
         const res = await axios.get(`${API_BASE_URL}/videos/shorts`);
         setShorts(res.data);
       } catch (err) {

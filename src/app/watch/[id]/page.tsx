@@ -320,7 +320,7 @@ const Watch = () => {
   const handleDownload = () => {
     if (!video) return;
     // Download route directly pipes raw video stream
-    const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    const apiBase = process.env.REACT_APP_API_URL || 'https://kiro-youtube-app.vercel.app/api';
     const serverUrl = apiBase.replace('/api', '');
     const downloadUrl = `${serverUrl}/api/videos/stream/${video.id}?download=true`;
     

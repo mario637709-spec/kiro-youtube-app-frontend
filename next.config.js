@@ -4,17 +4,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://kiro-youtube-app.vercel.app/api/:path*', // Proxy to Backend
-      },
-    ];
-  },
+  // eslint config moved here from root key (Next.js 16 compatibility)
+  // output: 'export' REMOVED — static export mode is incompatible with
+  // dynamic routes like /watch/[id]. Only add this for production builds.
 };
 
 module.exports = nextConfig;

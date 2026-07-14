@@ -10,7 +10,7 @@
 
 const PROXY_BASE = (typeof window !== 'undefined' && window.location?.hostname)
   ? `http://${window.location.hostname}:5000/api`
-  : 'http://localhost:5000/api';
+  : 'https://kiro-youtube-app.vercel.app/api';
 
 const YT_PROXY = `${PROXY_BASE}/videos/proxy/cors?url=`;
 

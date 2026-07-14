@@ -130,7 +130,7 @@ const Upload = () => {
     setProgress(0);
 
     const token = localStorage.getItem('token');
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kiro-youtube-app.vercel.app/api';
     const uploadId = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
     const chunkSize = 5 * 1024 * 1024; // 5 MB chunks
     const totalChunks = Math.ceil(videoFile.size / chunkSize);

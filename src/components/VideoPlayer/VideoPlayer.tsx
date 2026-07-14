@@ -174,6 +174,7 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
   // Helper to extract YouTube ID
   const getYoutubeId = (vid) => {
     if (!vid) return null;
+    if (vid.storageLocation === 'Local') return null; // Don't treat local mock videos as YouTube videos
     if (vid.youtube_id) return vid.youtube_id;
     if (vid.videoUrl) {
       try {
@@ -239,13 +240,13 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
       setLoadingStream(true);
       setStreamError(null);
 
-      // Helper to generate proxy URL fallback
+      // Helper to generate proxy URL fallback (Now points to the new streaming Orchestrator)
       const getProxyFallbackUrl = (qualityName = selectedQuality, type = '') => {
         const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-        let streamUrl = `${backendBase}/videos/stream/${video.id || ytId}?quality=${qualityName}`;
-        if (type) {
-          streamUrl += `&type=${type}`;
-        }
+        
+        // Use the new smart streaming orchestrator endpoint!
+        let streamUrl = `${backendBase}/stream/auto/${video.id || ytId}?quality=${qualityName}`;
+        
         if (poToken && visitorData) {
           streamUrl += `&poToken=${encodeURIComponent(poToken)}&visitorData=${encodeURIComponent(visitorData)}`;
         }
@@ -256,8 +257,14 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
         // Per project rules: Backend fetches raw data, BROWSER decrypts & streams directly from YouTube CDN
         const doClientSideExtraction = async () => {
           try {
+            // [TEMPORARY STOP BY ADMIN] - Bypassing client-side decryption, forcing new Server Microservices
+            if (true) {
+              console.log('[VideoPlayer] Client-side extraction temporarily stopped by Admin. Forcing fallback.');
+              throw new Error("Stopped by Admin");
+            }
+            
             console.log('[VideoPlayer] Starting 100% client-side YouTube stream extraction...');
-            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://kiro-youtube-app.vercel.app/api';
 
             // === Try youtubei.js/web client-side decryption first ===
             try {
@@ -562,15 +569,13 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
         if (active) {
           try {
             const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-            let streamUrlApi = `${backendBase}/videos/stream-url/${video.id || ytId}?quality=${selectedQuality}`;
-            if (poToken && visitorData) {
-              streamUrlApi += `&poToken=${encodeURIComponent(poToken)}&visitorData=${encodeURIComponent(visitorData)}`;
-            }
+            // Use NEW streaming API to get raw URL
+            let streamUrlApi = `${backendBase}/stream/url/${video.id || ytId}`;
             const urlRes = await fetch(streamUrlApi);
             if (urlRes.ok) {
               const { url } = await urlRes.json();
               if (url) {
-                console.log('[VideoPlayer] ✅ Got raw CDN URL from stream-url API, setting directly as src');
+                console.log('[VideoPlayer] ✅ Got raw CDN URL from NEW stream-url API, setting directly as src');
                 setResolvedUrl(url);
                 setResolvedAudioUrl('');
                 return;
@@ -580,7 +585,7 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
             console.warn('[VideoPlayer] stream-url API also failed:', streamUrlErr.message);
           }
 
-          // Last resort: keep proxy URL
+          // Last resort: keep proxy URL (which is now pointing to /stream/auto/)
           const fallbackUrl = getProxyFallbackUrl(selectedQuality);
           setResolvedUrl(fallbackUrl);
 
@@ -991,7 +996,7 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
     ) {
       errorRetryCountRef.current = 1;
       console.warn('[VideoPlayer] CDN URL failed — trying backend stream-url as one-time fallback...');
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const backendBase = process.env.NEXT_PUBLIC_API_URL || 'https://kiro-youtube-app.vercel.app/api';
       const poParam = poToken ? `&poToken=${encodeURIComponent(poToken)}` : '';
       const visParam = visitorData ? `&visitorData=${encodeURIComponent(visitorData)}` : '';
       fetch(`${backendBase}/videos/stream-url/${ytId}?quality=${selectedQuality}${poParam}${visParam}`)

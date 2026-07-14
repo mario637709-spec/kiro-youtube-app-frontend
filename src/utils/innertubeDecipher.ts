@@ -30,7 +30,7 @@ export const getAllDecryptedFormats = async (videoId, poToken, visitorData) => {
             url = String(input);
           }
           
-          const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+          const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://kiro-youtube-app.vercel.app/api';
           const proxyUrl = `${apiBase}/videos/proxy/cors?url=${encodeURIComponent(url)}`;
           const newInit = { ...init };
           if (newInit.headers) {

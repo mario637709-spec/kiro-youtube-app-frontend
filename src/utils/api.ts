@@ -1,5 +1,5 @@
 // @ts-nocheck
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://kiro-youtube-app.vercel.app/api';
 
 const getHeaders = (data) => {
   const headers = {};
