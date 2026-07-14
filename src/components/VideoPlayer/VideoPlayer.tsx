@@ -174,7 +174,7 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
   // Helper to extract YouTube ID
   const getYoutubeId = (vid) => {
     if (!vid) return null;
-    if (vid.storageLocation === 'Local') return null; // Don't treat local mock videos as YouTube videos
+    if (vid.storageLocation === 'Local') return null; // Force local streaming
     if (vid.youtube_id) return vid.youtube_id;
     if (vid.videoUrl) {
       try {
@@ -245,7 +245,7 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
         const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
         
         // Use the new smart streaming orchestrator endpoint!
-        let streamUrl = `${backendBase}/stream/auto/${video.id || ytId}?quality=${qualityName}`;
+        let streamUrl = `${backendBase}/stream/auto/${ytId || video.id}?quality=${qualityName}`;
         
         if (poToken && visitorData) {
           streamUrl += `&poToken=${encodeURIComponent(poToken)}&visitorData=${encodeURIComponent(visitorData)}`;
@@ -570,7 +570,7 @@ const VideoPlayer = ({ video, isTheaterMode, onTheaterModeToggle, isLoading }) =
           try {
             const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
             // Use NEW streaming API to get raw URL
-            let streamUrlApi = `${backendBase}/stream/url/${video.id || ytId}`;
+            let streamUrlApi = `${backendBase}/stream/url/${ytId || video.id}`;
             const urlRes = await fetch(streamUrlApi);
             if (urlRes.ok) {
               const { url } = await urlRes.json();
