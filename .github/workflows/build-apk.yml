@@ -21,9 +21,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Next.js App
-        run: npm run build
-
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -43,5 +40,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: app-debug.apk
+          name: Kiro-YouTube-App.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
